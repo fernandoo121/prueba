@@ -43,6 +43,6 @@ services:
       TZ: "America/Montevideo"
 
       #Default dash pass
-      EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "121212"
+      EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "1514"
 
       EMQX_LISTENER__TCP__EXTERNAL__MAX_CONNECTIONS: 1000
