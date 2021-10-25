@@ -1,12 +1,12 @@
 version: "3.8"
 
-volumes:
-  vol-emqx-data:
-    name: foo-emqx-data
-  vol-emqx-etc:
-    name: foo-emqx-etc
-  vol-emqx-log:
-    name: foo-emqx-log
+#volumes:
+#  vol-emqx-data:
+#    name: foo-emqx-data
+#  vol-emqx-etc:
+#    name: foo-emqx-etc
+#  vol-emqx-log:
+#    name: foo-emqx-log
 
 
 services:
@@ -31,10 +31,13 @@ services:
     ports:
       - 18083:18083
       - 8083:8083
-    volumes:
-      - vol-emqx-data:/opt/emqx/data
-      - vol-emqx-etc:/opt/emqx/etc
-      - vol-emqx-log:/opt/emqx/log
+    #volumes:
+    #  - vol-emqx-data:/opt/emqx/data
+    #  - vol-emqx-etc:/opt/emqx/etc
+    #  - vol-emqx-log:/opt/emqx/log
+
+    links:
+      - mongo
 
     environment: 
       EMQX_NAME: fernan-pc
@@ -44,5 +47,32 @@ services:
 
       #Default dash pass
       EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "1514"
+
+      EMQX_ALLOW_ANONYMOUS: "false"
+
+      #MONGO  CONNECTION
+      EMQX_AUTH__MONGO__TYPE: single
+      EMQX_AUTH__MONGO__TOPOLOGY__POOL_SIZE: 1
+      EMQX_AUTH__MONGO__TOPOLOGY__MAX_OVERFLOW: 0
+
+      EMQX_AUTH__MONGO__SERVER: "mongo:27017"
+      EMQX_AUTH__MONGO__POOL: 8
+
+      EMQX_AUTH__MONGO__LOGIN: "devuser"
+      EMQX_AUTH__MONGO__PASSWORD: "devpassword"
+      EMQX_AUTH__MONGO__AUTH_SOURCE: admin
+
+      EMQX_AUTH__MONGO__DATABASE: "iotgl"
+      EMQX_AUTH__MONGO__AUTH_QUERY__COLLECTION: "emqxauthrules"
+
+      EMQX_AUTH__MONGO__SUPER_QUERY__COLLECTION: "emqxauthrules"
+      EMQX_AUTH__MONGO__SUPER_QUERY__SUPER_FIELD: "is_superuser"
+      EMQX_AUTH__MONGO__SUPER_QUERY__SELECTOR: "username=%u"
+      EMQX_AUTH__MONGO__SUPER_QUERY: "off"
+
+      EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_HASH: plain
+      EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_FIELD: "password"
+      EMQX_AUTH__MONGO__AUTH_QUERY__SELECTOR: "username=%u"
+
 
       EMQX_LISTENER__TCP__EXTERNAL__MAX_CONNECTIONS: 1000
